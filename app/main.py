@@ -13,14 +13,14 @@ app = FastAPI(title="Swagger UI")
 origins = [
     "http://localhost",
     "http://90.156.210.55",
-    "*"
+    "*",
 ]  # Сервера, которые могут отправлять запросы на Backend
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Access-Control-Allow-Origin",
                    "Access-Control-Allow-Methods", "X-Requested-With",
                    "Authorization", "X-CSRF-Token"]

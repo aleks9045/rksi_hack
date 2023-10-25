@@ -22,7 +22,6 @@ async def upload_task(schema: Task_schema, session: AsyncSession = Depends(get_a
                                          begin=schema.model_dump()["begin"],
                                          end=schema.model_dump()["end"],
                                          status=schema.model_dump()["status"],
-                                         when_end=schema.model_dump()["when_end"],
                                          priority=schema.model_dump()["priority"],
                                          weight=schema.model_dump()["weight"],
                                          category=schema.model_dump()["category"],

@@ -6,11 +6,10 @@ class Task_schema(BaseModel):
     name: str
     description: str
     more_info: str
-    files: int
     begin: datetime
     end: datetime
     status: str
-    priority: int
-    weight: str
+    priority: str
+    weight: int
     category: str
     users: str

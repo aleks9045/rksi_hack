@@ -28,7 +28,9 @@ async def upload_task(schema: Task_schema, session: AsyncSession = Depends(get_a
                                          users=i)
         await session.execute(stmt)
         await session.commit()
-    return "OK"
+
+    query = select(Task_model.id)
+    return
 
 
 @router.get('/all')
@@ -44,3 +46,4 @@ async def upload_task(email: str, session: AsyncSession = Depends(get_async_sess
     result = await session.execute(query)
     result = result.scalars().all()
     return result
+

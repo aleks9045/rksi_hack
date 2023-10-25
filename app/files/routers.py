@@ -19,7 +19,7 @@ async def upload_file(task: int, files: list[UploadFile], session: AsyncSession 
         async with aiofiles.open(file_path, 'wb') as out_file:
             content = file.file.read()
             await out_file.write(content)
-        stmt = insert(File_model).values(file_name=file.filename, file_path=file_path)
+        stmt = insert(File_model).values(task=id, file_name=file.filename, file_path=file_path)
         await session.execute(statement=stmt)
         await session.commit()
     return {"status": "files was saved"}

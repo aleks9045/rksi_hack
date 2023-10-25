@@ -32,3 +32,12 @@ class UserCreate(schemas.BaseUserCreate):
     is_superuser: Optional[bool] = False
     is_verified: Optional[bool] = False
 
+
+class UserUpdate(schemas.BaseUserUpdate):
+    email: Optional[EmailStr] = None
+    name: Optional[str] = None
+    is_admin: bool
+    password: Optional[str] = None
+    is_active: Optional[bool] = None
+    is_superuser: Optional[bool] = None
+    is_verified: Optional[bool] = None

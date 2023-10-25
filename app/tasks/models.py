@@ -7,8 +7,6 @@ from app.database import Base
 metadata = MetaData()
 
 
-
-
 class Task(Base):
     __tablename__ = "task"
 

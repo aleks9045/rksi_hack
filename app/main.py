@@ -2,10 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.auth.routers import fastapi_users, auth_backend
+from app.auth.routers import fastapi_users, auth_backend, router as user_router
 from app.auth.schemas import UserRead, UserCreate, UserUpdate
 from app.files.routers import router as file_router
 from app.tasks.routers import router as task_router
+from app.deferred_tasks.routers import router as deferred_router
 
 app = FastAPI(title="Swagger UI")
 
@@ -49,6 +50,14 @@ app.include_router(
 
 app.include_router(
     task_router
+)
+
+app.include_router(
+    user_router
+)
+
+app.include_router(
+    deferred_router
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

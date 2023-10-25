@@ -1,8 +1,7 @@
 from typing import Optional
-from fastapi import UploadFile, File
 from fastapi_users import schemas
 from fastapi_users.schemas import PYDANTIC_V2
-from pydantic import EmailStr
+from pydantic import EmailStr, ConfigDict
 
 
 class UserRead(schemas.BaseUser[int]):

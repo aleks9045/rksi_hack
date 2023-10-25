@@ -6,7 +6,7 @@ metadata = MetaData()
 
 
 class File(Base):
-    __tablename__ = "files"
+    __tablename__ = "file"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     file_path = Column(String, nullable=False)

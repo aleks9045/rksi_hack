@@ -6,7 +6,7 @@ user = Table(
     'user',
     metadata,
     Column('id', type_=Integer, primary_key=True),
-    Column('email', String, nullable=False),
+    Column('email', String, nullable=False, unique=True),
     Column('name', String(16), nullable=False),
     Column('photo', String, nullable=True),
     Column("hashed_password", String(length=1024), nullable=False),

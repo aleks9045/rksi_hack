@@ -20,7 +20,8 @@ services:
     volumes:
       - static_volume:/app/static/
     command: >
-      /bin/sh -c "alembic upgrade head &&
+      /bin/sh -c "alembic revision --autogenerate &&
+                  alembic upgrade head &&
       uvicorn app.main:app --host 0.0.0.0 --port 8000"
 
 

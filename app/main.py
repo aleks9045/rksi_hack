@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from app.auth.routers import fastapi_users, auth_backend
 from app.auth.schemas import UserRead, UserCreate, UserUpdate
 from app.files.routers import router as file_router
+from app.tasks.routers import router as task_router
 
 app = FastAPI(title="Swagger UI")
 
@@ -44,6 +45,10 @@ app.include_router(
 
 app.include_router(
     file_router
+)
+
+app.include_router(
+    task_router
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

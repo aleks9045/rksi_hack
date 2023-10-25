@@ -15,18 +15,18 @@ router = APIRouter(
 
 @router.post("/add")
 async def upload_task(schema: Task_schema, session: AsyncSession = Depends(get_async_session)):
-    for i in schema.dict()['users'].split(' '):
-        stmt = insert(Task_model).values(name=schema.dict()["name"],
-                                         description=schema.dict()["description"],
-                                         more_info=schema.dict()["more_info"],
-                                         # files=schema.dict()["files"],
-                                         begin=schema.dict()["begin"],
-                                         end=schema.dict()["end"],
-                                         status=schema.dict()["status"],
-                                         when_end=schema.dict()["when_end"],
-                                         priority=schema.dict()["priority"],
-                                         weight=schema.dict()["weight"],
-                                         category=schema.dict()["category"],
+    for i in schema.model_dump()['users'].split(' '):
+        stmt = insert(Task_model).values(name=schema.model_dump()["name"],
+                                         description=schema.model_dump()["description"],
+                                         more_info=schema.model_dump()["more_info"],
+                                         files=schema.model_dump()["files"],
+                                         begin=schema.model_dump()["begin"],
+                                         end=schema.model_dump()["end"],
+                                         status=schema.model_dump()["status"],
+                                         when_end=schema.model_dump()["when_end"],
+                                         priority=schema.model_dump()["priority"],
+                                         weight=schema.model_dump()["weight"],
+                                         category=schema.model_dump()["category"],
                                          users=i)
         await session.execute(stmt)
         await session.commit()
@@ -45,5 +45,4 @@ async def upload_task(email: str, session: AsyncSession = Depends(get_async_sess
     query = select(Task_model).where(Task_model.users == email)
     result = await session.execute(query)
     result = result.scalars().all()
-    print(result)
     return result

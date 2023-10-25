@@ -9,7 +9,6 @@ class Task_schema(BaseModel):
     files: int
     begin: datetime
     end: datetime
-    when_end: datetime
     status: str
     priority: int
     weight: str

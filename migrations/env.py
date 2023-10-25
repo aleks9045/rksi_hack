@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.config import POSTGRES_USER, PORT, POSTGRES_PASSWORD, HOST, POSTGRES_DB
 from app.database import Base
+from app.auth.models import metadata
 from app.files.models import metadata as meta_files
 from app.tasks.models import metadata as meta_tasks
 
@@ -23,7 +24,7 @@ config.set_section_option(section, "PORT", PORT)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = [Base.metadata]
+target_metadata = [metadata, meta_files, meta_tasks]
 
 
 def run_migrations_offline() -> None:

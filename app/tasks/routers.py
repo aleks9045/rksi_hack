@@ -19,7 +19,6 @@ async def upload_task(schema: Task_schema, session: AsyncSession = Depends(get_a
         stmt = insert(Task_model).values(name=schema.model_dump()["name"],
                                          description=schema.model_dump()["description"],
                                          more_info=schema.model_dump()["more_info"],
-                                         files=schema.model_dump()["files"],
                                          begin=schema.model_dump()["begin"],
                                          end=schema.model_dump()["end"],
                                          status=schema.model_dump()["status"],

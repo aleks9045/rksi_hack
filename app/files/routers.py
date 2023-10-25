@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.post('/add')
-async def upload_file(files: list[UploadFile], session: AsyncSession = Depends(get_async_session)):
+async def upload_file(task: int, files: list[UploadFile], session: AsyncSession = Depends(get_async_session)):
     for file in files:
         file_path = f'static/{file.filename}'
         async with aiofiles.open(file_path, 'wb') as out_file:

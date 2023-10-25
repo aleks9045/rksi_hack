@@ -21,6 +21,12 @@ router = APIRouter(
 
 @router.get("/all")
 async def all_users(session: AsyncSession = Depends(get_async_session)):
+    query = select(user.c.name)
+    names = await session.execute(query)
     query = select(user.c.email)
-    result = await session.execute(query)
-    return result.scalars().all()
+    emails = await session.execute(query)
+    result = []
+    for i in names.scalars().all():
+        for j in emails.scalars().all():
+            result.append({"name": i, "email": j})
+    return result

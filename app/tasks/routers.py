@@ -46,14 +46,14 @@ async def upload_task(schema: Task_schema, session: AsyncSession = Depends(get_a
 
 
 @router.get('/all')
-async def get_file(session: AsyncSession = Depends(get_async_session)):
+async def all_task(session: AsyncSession = Depends(get_async_session)):
     query = select(Task_model)
     result = await session.execute(query)
     return result.scalars().all()
 
 
 @router.get("/me")
-async def upload_task(email: str, session: AsyncSession = Depends(get_async_session)):
+async def my_tasks(email: str, session: AsyncSession = Depends(get_async_session)):
     query = select(Task_model).where(Task_model.users == email)
     result = await session.execute(query)
     result_data = result.scalars().all()
@@ -71,8 +71,7 @@ async def upload_task(email: str, session: AsyncSession = Depends(get_async_sess
 
 
 @router.patch("/patch")
-async def upload_task(schema: Patch_schema,
-                      session: AsyncSession = Depends(get_async_session)):
+async def patch_task(schema: Patch_schema, session: AsyncSession = Depends(get_async_session)):
     stmt = update(Task_model).where(Task_model.id == schema.model_dump()["task_id"]) \
         .values(name=schema.model_dump()["name"],
                 description=schema.model_dump()["description"],
@@ -91,7 +90,7 @@ async def upload_task(schema: Patch_schema,
 
 
 @router.delete("/delete")
-async def upload_task(task_id: int, session: AsyncSession = Depends(get_async_session)):
+async def delete_task(task_id: int, session: AsyncSession = Depends(get_async_session)):
     stmt = delete(Task_model).where(Task_model.id == task_id)
     await session.execute(stmt)
     await session.commit()

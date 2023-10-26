@@ -34,7 +34,7 @@ async def all_users(session: AsyncSession = Depends(get_async_session)):
 
 
 @router.get("/become_super")
-async def all_users(email: str, session: AsyncSession = Depends(get_async_session)):
+async def super_users(email: str, session: AsyncSession = Depends(get_async_session)):
     stmt = update(user).where(user.c.email == email).values(is_superuser=True)
     await session.execute(statement=stmt)
     await session.commit()
@@ -42,8 +42,16 @@ async def all_users(email: str, session: AsyncSession = Depends(get_async_sessio
 
 
 @router.delete("/delete/{email}")
-async def all_users(email: str, session: AsyncSession = Depends(get_async_session)):
+async def delete_users(email: str, session: AsyncSession = Depends(get_async_session)):
     stmt = delete(user).where(user.c.email == email)
+    await session.execute(statement=stmt)
+    await session.commit()
+    return "OK"
+
+
+@router.patch("/admin_or_not_admin/{email}/{change}")
+async def delete_users(email: str, change: bool, session: AsyncSession = Depends(get_async_session)):
+    stmt = update(user).where(user.c.email == email).values(is_admin=change)
     await session.execute(statement=stmt)
     await session.commit()
     return "OK"

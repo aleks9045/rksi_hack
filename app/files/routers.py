@@ -36,7 +36,7 @@ async def get_file(id: int, session: AsyncSession = Depends(get_async_session)):
 
 
 @router.get('/all')
-async def get_file(session: AsyncSession = Depends(get_async_session)):
+async def all_file(session: AsyncSession = Depends(get_async_session)):
     query = select(File_model)
     result = await session.execute(query)
     return result.scalars().all()

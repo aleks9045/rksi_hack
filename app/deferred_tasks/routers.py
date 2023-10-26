@@ -22,7 +22,7 @@ async def admin_send(email: EmailSchemaAdmin, background_tasks: BackgroundTasks)
     try:
         email = email.dict().get("email")
         html = '''
-        <h1>Вас зарегестрировали в системе FV Kotill</h1>
+        <h1>Вас зарегестрировали в системе FV Kostill</h1>
         '''
         background_tasks.add_task(sending_message, email, html)
         return {
@@ -202,7 +202,7 @@ async def deadline(background_tasks: BackgroundTasks, session: AsyncSession = De
         ls1 = [TestSchema(email=i.users) for i in result if (i.end - i.begin) == datetime.timedelta(seconds=86400)]
         ls_mail1 = [i.dict().get("email") for i in ls1]
         html1 = '''
-                <h1>До дедлайна остался один день! </h1>
+                <h1>До дедлайна остался один день!</h1>
                 <p></p>
                 <h3>Посмотрите свои задачи в личном кабинете: <a href="http://90.156.210.55/me">Твои задачи!</a></h3>
                 '''

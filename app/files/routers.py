@@ -15,16 +15,15 @@ router = APIRouter(
 
 
 @router.post('/add')
-async def upload_file(task_id: str, files: list[UploadFile], session: AsyncSession = Depends(get_async_session)):
+async def upload_file(task_id: str, file: UploadFile, session: AsyncSession = Depends(get_async_session)):
     for id in task_id.split(' '):
-        for file in files:
-            file_path = f'static/{file.filename}'
-            async with aiofiles.open(file_path, 'wb') as out_file:
-                content = file.file.read()
-                await out_file.write(content)
-            stmt = insert(File_model).values(task=int(id), file_name=file.filename, file_path=file_path)
-            await session.execute(statement=stmt)
-            await session.commit()
+        file_path = f'static/{file.filename}'
+        async with aiofiles.open(file_path, 'wb') as out_file:
+            content = file.file.read()
+            await out_file.write(content)
+        stmt = insert(File_model).values(task=int(id), file_name=file.filename, file_path=file_path)
+        await session.execute(statement=stmt)
+        await session.commit()
     return {"status": "files was saved"}
 
 

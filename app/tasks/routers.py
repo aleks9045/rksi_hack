@@ -61,7 +61,6 @@ async def upload_task(email: str, session: AsyncSession = Depends(get_async_sess
 
     ids_dct = {}
     for i in result_ids:
-        print(i)
         query = select(File_model.file_path).where(File_model.task == i)
         result = await session.execute(query)
         ids_dct[i] = result.scalars().all()

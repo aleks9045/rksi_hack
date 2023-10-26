@@ -1,5 +1,4 @@
-from sqlalchemy import Column, MetaData, Integer, String, TIMESTAMP, ForeignKey
-from app.auth.models import user
+from sqlalchemy import Column, MetaData, Integer, String, DATE, ForeignKey
 from app.database import Base
 
 metadata = MetaData()
@@ -13,9 +12,9 @@ class Task(Base):
     description = Column(String, nullable=False)
     more_info = Column(String, nullable=True)
     files = Column(String, nullable=True)
-    begin = Column(TIMESTAMP, nullable=False)
-    end = Column(TIMESTAMP, nullable=False)
-    when_end = Column(TIMESTAMP, nullable=True)
+    begin = Column(DATE, nullable=False)
+    end = Column(DATE, nullable=False)
+    when_end = Column(DATE, nullable=True)
     status = Column(String, nullable=False)
     priority = Column(String, nullable=False)
     weight = Column(Integer, nullable=False)

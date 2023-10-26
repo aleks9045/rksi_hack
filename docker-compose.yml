@@ -29,13 +29,15 @@ services:
       /bin/sh -c "alembic revision --autogenerate &&
                   alembic upgrade head &&
       uvicorn app.main:app --host 0.0.0.0 --port 8000"
-#  nginx:
-#    build: nginx/
-#    container_name: nginx
-#    depends_on:
-#      - backend
-#    ports:
-#      - "8000:80"
+  nginx:
+    build: nginx/
+    container_name: nginx
+    depends_on:
+      - backend
+      - db
+      - redis
+    ports:
+      - "8001:80"
 
 
 volumes:

@@ -1,13 +1,13 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import date
 
 
 class Task_schema(BaseModel):
     name: str
     description: str
     more_info: str
-    begin: datetime
-    end: datetime
+    begin: date
+    end: date
     status: str
     priority: str
     weight: int

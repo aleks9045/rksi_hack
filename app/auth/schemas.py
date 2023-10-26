@@ -11,7 +11,7 @@ class UserRead(schemas.BaseUser[int]):
     name: str
     is_admin: bool
     is_active: bool = True
-    is_superuser: bool = False
+    is_superuser: bool
     is_verified: bool = False
 
     if PYDANTIC_V2:  # pragma: no cover
@@ -28,7 +28,7 @@ class UserCreate(schemas.BaseUserCreate):
     is_admin: bool
     password: str
     is_active: Optional[bool] = True
-    is_superuser: Optional[bool] = False
+    is_superuser: Optional[bool]
     is_verified: Optional[bool] = False
 
 

@@ -77,9 +77,9 @@ async def upload_task(task_id: int, new_status: str, session: AsyncSession = Dep
     return "OK"
 
 
-# @router.delete("/delete")
-# async def upload_task(task_id: int session: AsyncSession = Depends(get_async_session)):
-#     stmt = delete
-#     await session.execute(stmt)
-#     await session.commit()
-#     return "OK"
+@router.delete("/delete")
+async def upload_task(task_id: int, session: AsyncSession = Depends(get_async_session)):
+    stmt = delete(Task_model).where(Task_model.id == task_id)
+    await session.execute(stmt)
+    await session.commit()
+    return "OK"

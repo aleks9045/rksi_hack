@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from fastapi_users import FastAPIUsers
-from sqlalchemy import select, update
+from sqlalchemy import select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.base_config import auth_backend
@@ -36,6 +36,14 @@ async def all_users(session: AsyncSession = Depends(get_async_session)):
 @router.get("/become_super")
 async def all_users(email: str, session: AsyncSession = Depends(get_async_session)):
     stmt = update(user).where(user.c.email == email).values(is_superuser=True)
+    await session.execute(statement=stmt)
+    await session.commit()
+    return "OK"
+
+
+@router.delete("/delete/{email}")
+async def all_users(email: str, session: AsyncSession = Depends(get_async_session)):
+    stmt = delete(user).where(user.c.email == email)
     await session.execute(statement=stmt)
     await session.commit()
     return "OK"

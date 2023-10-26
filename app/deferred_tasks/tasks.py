@@ -1,16 +1,10 @@
 from fastapi_mail import FastMail, MessageSchema, MessageType
-from celery import Celery
 
 from app.deferred_tasks.config import conf
 
-
-celery = Celery('tasks', broker='redis://redis:6379')
-
-
-@celery.task
 async def sending_message(email, html):
     message = MessageSchema(
-        subject="Здраствуйте!",
+        subject="Уведомления",
         recipients=email,
         body=html,
         subtype=MessageType.html)
@@ -19,5 +13,12 @@ async def sending_message(email, html):
     await fm.send_message(message)
 
 
+async def deadline(email, html):
+    message = MessageSchema(
+        subject="Время подходит к концу!",
+        recipients=email,
+        body=html,
+        subtype=MessageType.html)
 
-
+    fm = FastMail(conf)
+    await fm.send_message(message)

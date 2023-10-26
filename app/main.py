@@ -62,3 +62,10 @@ app.include_router(
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+# @app.on_event('startup')
+# async def init_data(session: AsyncSession = Depends(get_async_session)):
+#     scheduler = AsyncIOScheduler()
+#     scheduler.add_job(deadline, 'cron', second='*/5', kwargs={'session': session})
+#     scheduler.start()

@@ -8,37 +8,30 @@ services:
       - "5432:5432"
     env_file:
       - .env
-  redis:
-    container_name: redis
-    image: redis:7.2.2-alpine
-    ports:
-      - "6379:6379"
-    environment:
-      - REDIS_PORT=6379
+#  redis:
+#    container_name: redis
+#    image: redis:7.2.2-alpine
+#    ports:
+#      - "6379:6379"
+#    environment:
+#      - REDIS_PORT=6379
   backend:
     container_name: backend
     depends_on:
       - db
-      - redis
     build: .
     ports:
       - "8000:8000"
-    volumes:
-      - static_volume:/app/static/
     command: >
       /bin/sh -c "alembic revision --autogenerate &&
                   alembic upgrade head &&
       uvicorn app.main:app --host 0.0.0.0 --port 8000"
-  nginx:
-    build: nginx/
-    container_name: nginx
-    depends_on:
-      - backend
-      - db
-      - redis
-    ports:
-      - "8001:80"
-
-
-volumes:
-  static_volume:
+#  nginx:
+#    build: nginx/
+#    container_name: nginx
+#    depends_on:
+#      - backend
+#      - db
+#      - redis
+#    ports:
+#      - "8001:80"

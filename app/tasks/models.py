@@ -12,6 +12,7 @@ class Task(Base):
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
     more_info = Column(String, nullable=True)
+    files = Column(String, nullable=True)
     begin = Column(TIMESTAMP, nullable=False)
     end = Column(TIMESTAMP, nullable=False)
     when_end = Column(TIMESTAMP, nullable=True)

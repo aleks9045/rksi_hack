@@ -45,6 +45,10 @@ app.include_router(
 )
 
 app.include_router(
+    user_router
+)
+
+app.include_router(
     file_router
 )
 
@@ -52,9 +56,6 @@ app.include_router(
     task_router
 )
 
-app.include_router(
-    user_router
-)
 
 app.include_router(
     deferred_router

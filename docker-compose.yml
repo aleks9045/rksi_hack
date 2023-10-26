@@ -8,8 +8,8 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password228
   redis:
     container_name: redis
     image: redis:7.2.2-alpine
@@ -31,6 +31,12 @@ services:
       /bin/sh -c "alembic revision --autogenerate &&
                   alembic upgrade head &&
       uvicorn app.main:app --host 0.0.0.0 --port 8000"
+  nginx:
+    container_name: nginx
+    depends_on:
+      - backend
+    ports:
+      - "8000:80"
 
 
 volumes:

@@ -77,7 +77,7 @@ async def upload_task(email: str, new_status: str, session: AsyncSession = Depen
 
 
 @router.patch("/delete")
-async def upload_task(id: int, new_status: str, session: AsyncSession = Depends(get_async_session)):
+async def upload_task(task_id: int, new_status: str, session: AsyncSession = Depends(get_async_session)):
     stmt = update(Task_model).where(Task_model.id == id).values(status=new_status)
     await session.execute(stmt)
     await session.commit()

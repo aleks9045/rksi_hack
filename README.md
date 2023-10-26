@@ -1,5 +1,5 @@
 # FastApi project
-### Frontend docs: 
+### Frontend repository: https://github.com/inpanica/rksi_2023_frontend
 ## .env (must be in root directory)
 ```
 POSTGRES_DB=
@@ -9,6 +9,9 @@ HOST=
 PORT=""
 SECRET_MANAGER=""
 SECRET_JWT=""
+MAIL_USERNAME=""
+MAIL_PASSWORD=""
+MAIL_FROM=""
 ```
 ## Launch for local development
 ```
@@ -31,7 +34,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 ## Launch in docker
 ```
-nothing 
+docker-compose up --build
 ```
 # http://90.156.210.55:8000/docs#/ - swagger ui (backend documentaion)
 ## Used technologies
@@ -48,8 +51,3 @@ nothing
 #### 1. http://90.156.210.55:8000/auth/register
 #### 2. http://90.156.210.55:8000/auth/jwt/login
 #### 3. http://90.156.210.55:8000/users/me (with Authorization header)
-## start tests
-```
-pytest -v -s tests/
-```
-

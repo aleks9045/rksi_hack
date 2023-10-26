@@ -28,9 +28,6 @@ app.add_middleware(
 )  # Побеждаем политику CORS
 
 
-app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts=["*"]
-)
 
 
 app.include_router(

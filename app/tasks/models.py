@@ -11,7 +11,6 @@ class Task(Base):
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
     more_info = Column(String, nullable=True)
-    files = Column(String, nullable=True)
     begin = Column(DATE, nullable=False)
     end = Column(DATE, nullable=False)
     when_end = Column(String, nullable=True)

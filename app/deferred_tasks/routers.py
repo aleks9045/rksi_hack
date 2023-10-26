@@ -17,12 +17,12 @@ router = APIRouter(
 
 # mail
 
-@router.post('/mail/admin_send')
+@router.post('/mail/send')
 async def admin_send(email: EmailSchemaAdmin, background_tasks: BackgroundTasks):
     try:
         email = email.dict().get("email")
         html = '''
-        <h1>Вас добавили в администраторы</h1>
+        <h1>Вас зарегестрировали в системе FV Kotill</h1>
         '''
         background_tasks.add_task(sending_message, email, html)
         return {

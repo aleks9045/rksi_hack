@@ -49,7 +49,19 @@ async def upload_task(schema: Task_schema, session: AsyncSession = Depends(get_a
 async def all_task(session: AsyncSession = Depends(get_async_session)):
     query = select(Task_model)
     result = await session.execute(query)
-    return result.scalars().all()
+    result_data = result.scalars().all()
+
+    query = select(Task_model.id)
+    result = await session.execute(query)
+    result_ids = result.scalars().all()
+
+    ids_dct = {}
+    for i in result_ids:
+        query = select(File_model.file_path).where(File_model.task == i)
+        result = await session.execute(query)
+        ids_dct[i] = result.scalars().all()
+
+    return {"data": result_data, "files": ids_dct}
 
 
 @router.get("/me")
@@ -57,6 +69,7 @@ async def my_tasks(email: str, session: AsyncSession = Depends(get_async_session
     query = select(Task_model).where(Task_model.users == email)
     result = await session.execute(query)
     result_data = result.scalars().all()
+
     query = select(Task_model.id).where(Task_model.users == email)
     result = await session.execute(query)
     result_ids = result.scalars().all()

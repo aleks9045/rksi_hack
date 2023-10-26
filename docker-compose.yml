@@ -6,10 +6,8 @@ services:
     container_name: db
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=password228
+    env_file:
+      - .env
   redis:
     container_name: redis
     image: redis:7.2.2-alpine

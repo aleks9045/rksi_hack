@@ -23,6 +23,7 @@ async def upload_task(schema: Task_schema, session: AsyncSession = Depends(get_a
                                          more_info=schema.model_dump()["more_info"],
                                          begin=schema.model_dump()["begin"],
                                          end=schema.model_dump()["end"],
+                                         when_end=schema.model_dump()["when_end"],
                                          status=schema.model_dump()["status"],
                                          priority=schema.model_dump()["priority"],
                                          weight=schema.model_dump()["weight"],
@@ -70,8 +71,9 @@ async def upload_task(email: str, session: AsyncSession = Depends(get_async_sess
 
 
 @router.patch("/patch")
-async def upload_task(task_id: int, new_status: str, session: AsyncSession = Depends(get_async_session)):
-    stmt = update(Task_model).where(Task_model.id == task_id).values(status=new_status)
+async def upload_task(task_id: int, new_status: str, when_end: str, session: AsyncSession = Depends(get_async_session)):
+    stmt = update(Task_model).where(Task_model.id == task_id).values(status=new_status,
+                                                                     when_end=when_end)
     await session.execute(stmt)
     await session.commit()
     return "OK"

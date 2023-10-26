@@ -22,7 +22,38 @@ async def admin_send(email: EmailSchemaAdmin, background_tasks: BackgroundTasks)
     try:
         email = email.dict().get("email")
         html = '''
-        <h1>Вас зарегестрировали в системе FV Kostill</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body{
+            padding: 30px;
+            background-color: #1B1D2C;
+            color: #FFFFFF;
+        }
+        a{
+            color: #D35077 !important;
+            text-decoration: underline;
+            font-size: 20px;
+        }
+        p{
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Здравствуйте!</h1>
+    <h2>Вы были зарегистрированы на сервисе командной работы</h2>
+    <p>Вы можете <a href="http://90.156.210.55/me">перейти по этой ссылке</a>, чтобы узнать подробнее</p>
+</body>
+</html>
         '''
         background_tasks.add_task(sending_message, email, html)
         return {

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
 from app.auth.routers import fastapi_users, auth_backend, router as user_router
 from app.auth.schemas import UserRead, UserCreate, UserUpdate
@@ -25,6 +26,12 @@ app.add_middleware(
                    "Access-Control-Allow-Methods", "X-Requested-With",
                    "Authorization", "X-CSRF-Token"]
 )  # Побеждаем политику CORS
+
+
+app.add_middleware(
+    TrustedHostMiddleware, allowed_hosts=["*"]
+)
+
 
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),

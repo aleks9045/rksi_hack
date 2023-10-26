@@ -27,14 +27,6 @@ async def upload_file(task_id: str, file: UploadFile, session: AsyncSession = De
     return {"status": "files was saved"}
 
 
-@router.get('/get')
-async def get_file(id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(File_model.file_path).where(File_model.id == id)
-    result = await session.execute(query)
-    file_path = result.scalars().all()[0]
-    return "http://90.156.210.55:8000/" + file_path
-
-
 @router.get('/all')
 async def all_file(session: AsyncSession = Depends(get_async_session)):
     query = select(File_model)

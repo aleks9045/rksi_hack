@@ -69,16 +69,16 @@ async def upload_task(email: str, session: AsyncSession = Depends(get_async_sess
 
 
 @router.patch("/patch")
-async def upload_task(email: str, new_status: str, session: AsyncSession = Depends(get_async_session)):
-    stmt = update(Task_model).where(Task_model.users == email).values(status=new_status)
-    await session.execute(stmt)
-    await session.commit()
-    return "OK"
-
-
-@router.patch("/delete")
 async def upload_task(task_id: int, new_status: str, session: AsyncSession = Depends(get_async_session)):
     stmt = update(Task_model).where(Task_model.id == task_id).values(status=new_status)
     await session.execute(stmt)
     await session.commit()
     return "OK"
+
+
+# @router.delete("/delete")
+# async def upload_task(task_id: int, new_status: str, session: AsyncSession = Depends(get_async_session)):
+#     stmt = update(Task_model).where(Task_model.id == task_id).values(status=new_status)
+#     await session.execute(stmt)
+#     await session.commit()
+#     return "OK"

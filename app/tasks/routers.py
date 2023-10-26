@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy import select, insert, update
+from sqlalchemy import select, insert, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_async_session
@@ -36,6 +36,7 @@ async def upload_task(schema: Task_schema, session: AsyncSession = Depends(get_a
     result = await session.execute(query)
     max_id = max(result.scalars().all())
     ids_lst.append(max_id)
+    # ids_lst.append(max_id - i for i in)
     while count != 0:
         max_id -= 1
         ids_lst.append(max_id)
@@ -77,8 +78,8 @@ async def upload_task(task_id: int, new_status: str, session: AsyncSession = Dep
 
 
 # @router.delete("/delete")
-# async def upload_task(task_id: int, new_status: str, session: AsyncSession = Depends(get_async_session)):
-#     stmt = update(Task_model).where(Task_model.id == task_id).values(status=new_status)
+# async def upload_task(task_id: int session: AsyncSession = Depends(get_async_session)):
+#     stmt = delete
 #     await session.execute(stmt)
 #     await session.commit()
 #     return "OK"

@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_async_session
 from app.files.models import File as File_model
 from app.tasks.models import Task as Task_model
-from app.tasks.schemas import Task_schema
+from app.tasks.schemas import Task_schema, Patch_schema
 
 router = APIRouter(
     prefix="/task",
@@ -71,19 +71,20 @@ async def upload_task(email: str, session: AsyncSession = Depends(get_async_sess
 
 
 @router.patch("/patch")
-async def upload_task(task_id: int, schema: Task_schema,
+async def upload_task(schema: Patch_schema,
                       session: AsyncSession = Depends(get_async_session)):
-    stmt = update(Task_model).where(Task_model.id == task_id).values(name=schema.model_dump()["name"],
-                                                                     description=schema.model_dump()["description"],
-                                                                     more_info=schema.model_dump()["more_info"],
-                                                                     begin=schema.model_dump()["begin"],
-                                                                     end=schema.model_dump()["end"],
-                                                                     when_end=schema.model_dump()["when_end"],
-                                                                     status=schema.model_dump()["status"],
-                                                                     priority=schema.model_dump()["priority"],
-                                                                     weight=schema.model_dump()["weight"],
-                                                                     category=schema.model_dump()["category"]
-                                                                     )
+    stmt = update(Task_model).where(Task_model.id == schema.model_dump()["task_id"]) \
+        .values(name=schema.model_dump()["name"],
+                description=schema.model_dump()["description"],
+                more_info=schema.model_dump()["more_info"],
+                begin=schema.model_dump()["begin"],
+                end=schema.model_dump()["end"],
+                when_end=schema.model_dump()["when_end"],
+                status=schema.model_dump()["status"],
+                priority=schema.model_dump()["priority"],
+                weight=schema.model_dump()["weight"],
+                category=schema.model_dump()["category"]
+                )
     await session.execute(stmt)
     await session.commit()
     return "OK"

@@ -1,13 +1,19 @@
 import datetime
+import smtplib
+from jinja2 import Template
+
+from app.config import MAIL_USERNAME, MAIL_PASSWORD
 
 from app.tasks.models import Task as Task_model
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 from app.database import get_async_session
 from app.deferred_tasks.schema import EmailSchemaAdmin, EmailSchemaTask, TestSchema
-from app.deferred_tasks.tasks import sending_message
 
 router = APIRouter(
     prefix="/deferred_tasks",
@@ -18,66 +24,69 @@ router = APIRouter(
 # mail
 
 @router.post('/mail/send')
-async def admin_send(email: EmailSchemaAdmin, background_tasks: BackgroundTasks):
-    try:
-        email = email.dict().get("email")
-        html = '''
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        *{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        body{
-            padding: 30px;
-            background-color: #1B1D2C;
-            color: #FFFFFF;
-        }
-        a{
-            color: #D35077 !important;
-            text-decoration: underline;
-            font-size: 20px;
-        }
-        p{
-            font-size: 20px;
-        }
-    </style>
-</head>
-<body>
+async def admin_send(schema: EmailSchemaAdmin):
+    message = MIMEMultipart("alternative")
+    email, password = schema.model_dump()['email'], schema.model_dump()['password']
+    template = Template('''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            *{
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            body{
+                padding: 30px;
+                background-color: #1B1D2C;
+                color: #FFFFFF;
+            }
+            a{
+                color: #D35077 !important;
+                text-decoration: underline;
+                font-size: 20px;
+            }
+            p{
+                font-size: 20px;
+            }
+        </style>
+    </head>
+    <body>
 
-    <h1>Здравствуйте!</h1>
-    <h2>Вы были зарегистрированы на сервисе командной работы</h2>
-    <p>Вы можете <a href="http://90.156.210.55/me">перейти по этой ссылке</a>, чтобы узнать подробнее</p>
-</body>
-</html>
-        '''
-        background_tasks.add_task(sending_message, email, html)
-        return {
-            "status": "success",
-            "data": None,
-            "details": "message sent"
-        }
-    except Exception:
-        raise HTTPException(status_code=500, detail={
-            "status": "error",
-            "data": None,
-            "details": "message not sent"
-        })
+        <h1>Здравствуйте!</h1>
+        <h2>Вы были зарегистрированы на сервисе командной работы</h2>
+        <p>Вы можете <a href="http://90.156.210.55/login">перейти по этой ссылке</a>, чтобы войти в аккаунт</p>
+        <h2>Данные от вашего аккаунта:</h2>
+        <p>Email: <b>{{email}}</b></p>
+        <p>Password: <b>{{password}}</b></p>
+    </body>
+    </html>
+            ''')
+    html = template.render(email=email, password=password)
+    html_message = MIMEText(html, "html")
+    message.attach(html_message)
+    smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
+    smtp_server.starttls()
+    smtp_server.login(MAIL_USERNAME, MAIL_PASSWORD)
+    smtp_server.sendmail(MAIL_USERNAME, email, message.as_string())
+
+    return {
+        "status": "success",
+        "data": None,
+        "details": "message sent"
+    }
 
 
 @router.post('/mail/getting_a_task')
-async def getting_a_task(email: EmailSchemaTask, background_tasks: BackgroundTasks):
+async def getting_a_task(email: EmailSchemaTask):
     try:
         html = f'''
-        <h1>Вам присвоили задание: {email.dict().get('name_task')}</h1>
+        <h1>Вам присвоили задание: {email.model_dump().get('name_task')}</h1>
         <p></p>
         <h3>Вы можете посмотреть её в личном кабинете: (будущая ссылка)</h3>
         '''
-        background_tasks.add_task(sending_message, email.dict().get("email"), html)
         return {
             "status": "success",
             "data": None,
@@ -99,7 +108,6 @@ async def report(session: AsyncSession = Depends(get_async_session)):
         query = select(Task_model)
         result = await session.execute(query)
         result = result.scalars().all()
-
         all_tasks = len(result)
 
         # status
@@ -224,14 +232,14 @@ async def report_date(date: datetime.date, session: AsyncSession = Depends(get_a
 
 
 @router.post("/deadline")
-async def deadline(background_tasks: BackgroundTasks, session: AsyncSession = Depends(get_async_session)):
+async def deadline(session: AsyncSession = Depends(get_async_session)):
     try:
         query = select(Task_model).where(Task_model.status == 'in_progress')
         result = await session.execute(query)
         result = result.scalars().all()
 
         ls1 = [TestSchema(email=i.users) for i in result if (i.end - i.begin) == datetime.timedelta(seconds=86400)]
-        ls_mail1 = [i.dict().get("email") for i in ls1]
+        ls_mail1 = [i.model_dump().get("email") for i in ls1]
         html1 = '''
                 <h1>До дедлайна остался один день!</h1>
                 <p></p>
@@ -239,7 +247,7 @@ async def deadline(background_tasks: BackgroundTasks, session: AsyncSession = De
                 '''
 
         ls7 = [TestSchema(email=i.users) for i in result if (i.end - i.begin) == datetime.timedelta(seconds=604800)]
-        ls_mail7 = [i.dict().get("email") for i in ls7]
+        ls_mail7 = [i.model_dump().get("email") for i in ls7]
         html7 = '''
                 <h1>До дедлайна осталась неделя! </h1>
                 <p></p>
@@ -247,16 +255,13 @@ async def deadline(background_tasks: BackgroundTasks, session: AsyncSession = De
                 '''
 
         ls10 = [TestSchema(email=i.users) for i in result if (i.end - i.begin) == datetime.timedelta(seconds=864000)]
-        ls_mail10 = [i.dict().get("email") for i in ls10]
+        ls_mail10 = [i.model_dump().get("email") for i in ls10]
         html10 = '''
                 <h1>До дедлайна осталось десять дней! </h1>
                 <p></p>
                 <h3>Посмотрите свои задачи в личном кабинете: <a href="http://90.156.210.55/me">Твои задачи!</a></h3>
                  '''
 
-        background_tasks.add_task(sending_message, ls_mail1, html1)
-        background_tasks.add_task(sending_message, ls_mail7, html7)
-        background_tasks.add_task(sending_message, ls_mail10, html10)
         return {
             "status": "success",
             "data": None,

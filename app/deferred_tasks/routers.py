@@ -143,18 +143,11 @@ async def report(session: AsyncSession = Depends(get_async_session)):
             'average_weight': average_weight,
             'most_common_category': most_common_category,
             'most_common_priority': most_common_priority,
-            'all': {
-                'count': all_tasks,
-                'data': result
-            }
+            'count': all_tasks
         }
         return data
     except Exception:
-        raise HTTPException(status_code=503, detail={
-            "status": "error",
-            "data": Exception,
-            "details": "the report is not generated"
-        })
+        return ""
 
 
 @router.post("/report/date")

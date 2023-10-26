@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy import select, insert
+from sqlalchemy import select, insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_async_session
@@ -66,3 +66,11 @@ async def upload_task(email: str, session: AsyncSession = Depends(get_async_sess
         ids_dct[i] = result.scalars().all()
 
     return {"data": result_data, "files": ids_dct}
+
+
+@router.patch("/patch")
+async def upload_task(email: str, new_status: str, session: AsyncSession = Depends(get_async_session)):
+    stmt = update(Task_model).where(Task_model.users == email).values(status=new_status)
+    await session.execute(stmt)
+    await session.commit()
+    return "OK"

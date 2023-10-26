@@ -8,13 +8,6 @@ services:
       - "5432:5432"
     env_file:
       - .env
-#  redis:
-#    container_name: redis
-#    image: redis:7.2.2-alpine
-#    ports:
-#      - "6379:6379"
-#    environment:
-#      - REDIS_PORT=6379
   backend:
     container_name: backend
     depends_on:
@@ -32,6 +25,5 @@ services:
 #    depends_on:
 #      - backend
 #      - db
-##      - redis
 #    ports:
 #      - "8000:80"

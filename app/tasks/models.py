@@ -14,7 +14,7 @@ class Task(Base):
     files = Column(String, nullable=True)
     begin = Column(DATE, nullable=False)
     end = Column(DATE, nullable=False)
-    when_end = Column(String, nullable=True)
+    when_end = Column(String, nullable=False)
     status = Column(String, nullable=False)
     priority = Column(String, nullable=False)
     weight = Column(Integer, nullable=False)

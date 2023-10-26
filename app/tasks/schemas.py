@@ -8,6 +8,7 @@ class Task_schema(BaseModel):
     more_info: str
     begin: date
     end: date
+    when_end: str = "Popa"
     status: str
     priority: str
     weight: int
